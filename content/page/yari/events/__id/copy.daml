@@ -1,1 +1,220 @@
-{%page/yari/events/copy}
+<form method="POST" id="replicate">
+  <input type="hidden" name="event_id" value="{#id}">
+  <textarea type="hidden" name="commands" id="commands" style="display:none;">
+    {begin verbatim | process escape} 
+      {event replicate id #event_id | > :event_id}
+      {notice set value {* ( :message "<strong>Success!</strong> Your event has been replicated!" :type :success)}}  
+      {page redirect to {"yari/events/{@event_id}"}}
+    {end verbatim}
+  </textarea>
+  <button class="btn btn-large" type="submit"><i class="icon-plus"></i> Replicate event</button>  
+</form>
+{begin makepublic}
+  <form method="POST" id="replicate">
+    <input type="hidden" name="event_id" value="{#id}">
+    <textarea type="hidden" name="commands" id="commands" style="display:none;">
+      {begin verbatim | process escape} 
+        {permit grant thing (:events #event_id) permit "world:*" level :view}
+        {notice set value {* ( :message "<strong>Success!</strong> Your event is now public!" :type :success)}}  
+        {page redirect to {"yari/events/{#event_id}"}}
+      {end verbatim}
+    </textarea>
+    <button class="btn btn-large" type="submit"><i class="icon-eye-open"></i> Make public</button>
+  </form>
+{end makepublic}
+{begin makeprivate}
+  <form method="POST" id="replicate">
+    <input type="hidden" name="event_id" value="{#id}">
+    <textarea type="hidden" name="commands" id="commands" style="display:none;">
+      {begin verbatim | process escape} 
+        {permit revoke thing (:events #event_id) permit "world:*" level :view}
+        {notice set value {* ( :message "<strong>Success!</strong> Your event is now hidden." :type :success)}}  
+        {page redirect to {"yari/events/{#event_id}"}}
+      {end verbatim}
+    </textarea>
+    <button class="btn btn-large" type="submit"><i class="icon-eye-close"></i> Make private</button>
+  </form>
+
+  {begin existing | if #id}
+    <a class="btn" href="{@SITE.path}/events/{#id}"><i class="icon-zoom-in"></i> View public</a>
+  {end existing}
+{end makeprivate}
+{{:view | is in @event.perms.{"world:*"}} | then $makeprivate else $makepublic}
+<hr>
+{begin layout}
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#event-details" data-toggle="tab">Event Details</a></li>
+    <li><a href="#coupons" data-toggle="tab">Coupons ({coupons | collection count})</a></li>
+    <li><a href="#tickets" data-toggle="tab">Tickets ({@ticketed_profiles | collection count}/{capacity})</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="event-details">
+      <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8">
+        <div class="row">
+          <div class="span8 {@articles.{#id}.status}">
+            <h2>{if #id then "Editing Event" else "New Event"}</h2>
+            {/ TITLE }
+            <div class="title control-group">
+              <label for="title" class="control-label">Name</label>
+              <input type="text" name="name" id="title" class="span8" value="{name}">
+            </div>
+            {/ Description }
+            <div class="title control-group">
+              <label for="title" class="control-label">Description</label>
+              <textarea name="description" id="description" class="span8" rows="15" value="">{depot.description}</textarea>
+            </div>
+            {/ Summary }
+            <div class="title control-group">
+              <label for="title" class="control-label">Summary  <small class="pull-right">This appears in the header on  detail pages.</small></label>
+              <textarea name="summary" id="summary" class="span8" rows="4" value="">{depot.summary}</textarea>
+            </div>
+          </div>
+          <div class="span4">
+            {// STATUS //}
+            <div id="event-controls">
+              {// Attendee limit //}
+              <div class="control-group">
+                <label for="attendees" class="control-label">Capacity</label>
+                <input type="text" name="capacity" class="input-small" id="attendees" value="{capacity}">
+              </div>
+              {// event_price //}
+              <div class="control-group">
+                <label for="event_price" class="control-label">Ticket Price</label>
+                <input type="text" name="price" class="input-small" id="event_price" value="{price}">
+              </div>
+              {/ EVENT START DATE}
+              <div class="control-group">
+                <label for="event_start_date" class="control-label">Event start day</label>
+                <input type="text" name="event_start_date" class="" id="event_start_date" value="{start_date.sec | time represent as "M d, Y" | else ""}">
+
+                <input type="text" name="event_start_time" value="{start_date.sec | time represent as "g:ia" | else ""}" id="event_start_time">
+
+
+
+              </div>
+              {/ EVENT END DATE}
+              <div class="control-group">
+                <label for="event_end_date" class="control-label">Event end day</label>
+                <input type="text" name="event_end_date" class="date" id="" value="{end_date.sec | time represent as "M d, Y"}">
+                <input type="text" name="event_end_time" value="{end_date.sec | time represent as "g:ia" | else :10pm}" id="event_end_time">
+
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-large btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="event_id" value="{#id}">
+        <textarea name="commands" style="display:none">
+          {begin verbatim | process escape}
+
+            {(#event_start_date #event_start_time) | string join | > :event_start_date}
+            {(#event_end_date #event_end_time) | string join | > :event_end_date}
+            {begin edit}
+              {#event_id | event set_name value #name | event set_capacity value #capacity | event set_price value #price | event set_start_date value @event_start_date | event set_end_date value @event_end_date}
+              {exec set_event_depot event_id #event_id value #description path :description}
+              {exec set_event_depot event_id #event_id value #summary path :summary}
+              {page redirect to {"yari/events/{#event_id}"}}      
+            {end edit}
+
+
+
+
+            {begin new | if {#event_id | not} else $edit}
+              {event add | event set_name value #name | event set_capacity value #capacity | event set_price value #price | event set_start_date value @event_start_date | event set_end_date value @event_end_date | > :event_id}
+              {exec set_event_depot event_id @event_id value #description path :description}
+              {exec set_event_depot event_id @event_id value #summary path :summary}
+              {page redirect to {"yari/events/{@event_id}"}}
+            {end new}
+            {// {notice set value {* ( :message "<strong>Success!</strong> Your event has been saved!" :type :success)}} //}
+          {end verbatim}
+        </textarea>
+      </form>
+    </div>
+    <div class="tab-pane" id="coupons">
+      <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8" class="form-horizontal">
+        <h3>Coupons</h3>
+        <div class="coupons">
+          {begin coupons_block | merge with coupons}
+            <div class="control-group">
+              <label class="control-label" for="coupon-name">Name</label>
+              <div class="controls">
+                <input type="text" class="input" id="coupon-name" name="coupon-name" value="{name}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="coupon-key">Key</label>
+              <div class="controls">
+                <input type="text" class="input" id="coupon-key" name="coupon-key" value="{key}">
+                <p class="help-block">Coupon code.</p>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="coupon-verify">Verify</label>
+              <div class="controls">
+                <input type="text" class="input" id="coupon-verify" name="coupon-verify" value="{verify}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="coupon-verify">Discount</label>
+              <div class="controls">
+                <div class="input-append">
+                  <input class="span1" name="coupon-discount" id="appendedInput" size="" type="text" value="{discount}"><span class="add-on">%</span>
+                </div>
+              </div>
+            </div>
+            <hr>
+          {end coupons_block}
+          <div class="control-group">
+            <label class="control-label" for="coupon-name">Name</label>
+            <div class="controls">
+              <input type="text" class="input" id="coupon-name" name="coupon-name" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="coupon-key">Key</label>
+            <div class="controls">
+              <input type="text" class="input" id="coupon-key" name="coupon-key" value="">
+              <p class="help-block">Coupon code.</p>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="coupon-verify">Verify</label>
+            <div class="controls">
+              <input type="text" class="input" id="coupon-verify" name="coupon-verify" value="">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="coupon-verify">Discount</label>
+            <div class="controls">
+              <div class="input-append">
+                <input class="span1" name="coupon-discount" id="appendedInput" size="" type="text" value=""><span class="add-on">%</span>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <textarea type="hidden" name="commands" id="commands" style="display:none;">
+          {begin verbatim | process escape} 
+            {// TODO: Make coupons editable //}
+          {end verbatim}
+        </textarea>
+        <div class="form-actions">
+          <button class="btn btn-large btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+    <div class="tab-pane" id="tickets">
+      <ol>
+        {begin peeps | merge with @ticketed_profiles}
+          <li>{my.firstname} {my.lastname} -- {@level.{my.plan}}</p>
+          {end peeps}
+        </ol>
+      </div>
+    </div>
+  </div>
+</div><!--/.well -->
+</div><!--/span-->
+{end layout}
+{@event | then "{$layout | merge with @event}" else $layout}
