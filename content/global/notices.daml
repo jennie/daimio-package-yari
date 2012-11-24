@@ -1,0 +1,8 @@
+{notice get_new | > :notice | ""}
+{begin error | if @notice}
+  {begin noticelist | foreach with @notice}
+    <div class="alert alert-{value.*.type}">
+      {value.*.message} 
+    </div>
+  {end noticelist}
+{end error}

@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {data fetch form :articles where "tags = {tag} AND status = live" order "publish_date DESC" limit {limit | else :20} | > :return}
+{end nullblock}

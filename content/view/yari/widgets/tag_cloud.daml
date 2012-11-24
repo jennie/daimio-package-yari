@@ -1,0 +1,14 @@
+{/tag cloud}
+{article tag_cloud | > :tag_cloud | ""}
+
+<h5>Topics</h5>
+
+{begin tags | if @tag_cloud}
+<ul class="tagcloud">
+  {begin tag_cloud | merge with @tag_cloud}
+    {begin filter | if {or ({stripped_value | is like :events} {stripped_value | is like :class}) | not __pipe}}
+      <li><a href="{@SITE.path}/blog/tag/{stripped_value}" class="tag-{count}">{value}</a></li>
+    {end filter}
+  {end tag_cloud}
+</ul>
+{end tags}

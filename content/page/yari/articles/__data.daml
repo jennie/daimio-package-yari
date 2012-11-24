@@ -1,0 +1,17 @@
+{lens get_my_posts | > :articles}
+
+{data fetch form :comments | > :comments}
+
+{data fetch form :comments where {"{id} %= ({@articles.id | array to_csv})"} | array rekey by_key :article_id | > :article_comments}
+
+
+{data fetch form :comments where {"article_id %= ({@articles.id | array to_csv})"} | array sort by {* (:id :desc)} | > :allcomments | ""}
+
+{@allcomments | array rekey by_key :article_id | > :comments | ""}
+
+{data fetch form :profiles where {"user_id %= ({@comments.*.user_id | array unique | array to_csv})"} | array rekey by_key :user_id | > :profiles | ""}
+
+
+
+
+{%page/yari/__data | process consume}

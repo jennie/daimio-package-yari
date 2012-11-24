@@ -1,0 +1,27 @@
+{begin member | if @MY.id}
+  {lens profile_find id @MY.id | __.#1 | > :my_profile}
+  {member find by_ids @MY.id | __.#1 | > :my_member}
+{end member}
+
+{// EVENTS //}
+{lens get_past_events limit 200 | array organize command "sort:event_start_date,asc;" | > :past}
+{lens get_future_events limit 200  | array organize command "sort:event_start_date,asc;" | > :future}
+
+{* (
+  :dmg_dame "Dame"
+  :dmg_dame_yr "Dame"
+  :dmg_ally "Ally"
+  :dmg_ally_yr "Ally"
+  :dmg_biz_yr "Organization"
+) | > :level}
+
+{* (
+  :future {* (:name "Upcoming" :data @future :class :future-events)}
+  :past {* (:name "Past" :data @past :class :past-events)}
+) | > :events_old}
+
+{collection range start :1 limit :12 | > :months}
+{collection range start {time represent as "Y"} limit :2026 | > :years}
+
+
+{%metadata | proc}

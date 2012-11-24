@@ -1,0 +1,4 @@
+{%global/__data}
+{%page/yari/__data | process consume}
+{event find by_ids {#id} | > :event}
+{ticket find by_event #id | __pipe.user | profile find by_ids | > :ticketed_profiles}

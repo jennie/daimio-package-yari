@@ -1,0 +1,31 @@
+{/ data tables }
+<script type="text/javascript" charset="utf-8" language="javascript" src="{@SITE.path}/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf-8" language="javascript" src="{@SITE.path}/js/DT_bootstrap.js"></script>
+<script type="text/javascript" charset="utf-8" language="javascript" src="{@SITE.path}/js/bootstrap-datepicker.js"></script>
+{begin block | process escape}
+
+
+<script>
+$(document).ready(function(){
+  $('#login-modal').modal(
+    {backdrop: 'static',
+    show: true,
+    keyboard: false
+  });
+  $('.datepicker').datepicker({
+       weekStart: '1',
+        autoclose: true
+  });
+  $('.table-data').dataTable( {
+    "sDom": "<'row'<'span12'l><'span12'f>r>t<'row'<'span12'i><'span12'p>>",
+    "sPaginationType": "bootstrap"
+  } );
+  $.extend( $.fn.dataTableExt.oStdClasses, {
+    "sWrapper": "dataTables_wrapper form-inline",
+    });
+  });
+
+
+  </script>
+{end block}
+

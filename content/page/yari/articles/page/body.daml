@@ -1,0 +1,2 @@
+{lens get_articles_by_page page #page_number limit #limit}
+{#page_number | math multiply by limit | +: 1}

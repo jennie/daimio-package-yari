@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {permit superdo command "{ticket find by_event event | __pipe.user | profile find by_ids}" | > :return}  
+{end nullblock}

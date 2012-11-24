@@ -1,0 +1,7 @@
+{lens get_articles_published_by_user user #user_id | > :articles | ""}
+
+{merge string %template:yari/blog/post with @articles}
+
+{begin no_articles | if {not @articles}}
+<p>There are no matching articles.</p>
+{end no_articles}

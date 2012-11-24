@@ -1,0 +1,13 @@
+{notice get_new | > :notices | ""}
+
+{begin notice_block | if {@notices}}
+<div id="messages">
+  <div class="success notice">
+    {begin notices | merge with @notices}
+    <p>{value}</p>
+    {end notices}
+  </div>
+</div>
+{end notice_block}
+
+

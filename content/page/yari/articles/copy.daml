@@ -1,0 +1,84 @@
+
+<h1>Articles</h1> 
+ <div class="span12">
+
+<div class="row">
+
+  <div class="span6"><p>Showing: All your posts <span class="tagged_with">
+      {begin tagheader | if {#3 | is like "tag"}}
+        tagged with <strong>{#4}</strong> (<a href="{@SITE.path}/yari/articles">clear</a>)
+      {end tagheader}
+    </span>
+  </p>
+  </div>
+  <div class="span6">
+      <a href="{@SITE.path}/yari/write" class="pull-right btn btn-large btn-success">Write new article</a>
+  </div>
+</div>
+
+<div id="article_list">
+  {/ {%template/yari/admin/pager} }
+  <table class="table table-striped table-condensed table-data">
+    <thead>
+      <tr>
+        <th class="title">Title</th>
+        <th class="date">Published Date</th>
+        <th class="status">Status</th>
+        <th class="tags">Tags</th>
+        <th class="comments">Comments</th>
+        <th class="actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {begin articles | merge with @articles}
+        <tr class="{#row | is like {id} | then "edited"}" id="row-{id}">
+          <td><a href="{@SITE.path}/yari/write/{id}">{title}</a></td>
+          <td>{publish_date | time represent as "F j, Y"}</td>
+          <td><span class="{status}">{status}</span></td>
+          <td>
+            {if {tags.stripped_value} then "{merge string "<a href="{@SITE.path}/yari/articles/tag/{stripped_value}" class="badge">{value}</a>" with tags}" | else "&#8212;"}
+          </td>
+          <td>{allow_comments | is like "1" | then "<span class="on"> On {@article_comments.{id} | then "<a href="{@SITE.path}/yari/write/{id}#tab-comments" class="comment-count">{@article_comments.{id} | collection count}</a>"}</span>" else "<span class="off">Off</span>"}
+          </td>
+          <td>
+            <div class="btn-toolbar" style="margin-bottom: 9px">
+              <div class="btn-group">
+                <a class="btn" href="{@SITE.path}/yari/write/{id}"><i class="icon-pencil"></i></a>
+                <a class="btn" href="{@SITE.path}/blog/{id}"><i class="icon-eye-open"></i></a>
+                {/ <a class="btn" data-toggle="modal" href="#delete-{id}"><i class="icon-trash"></i></a> }
+              </div>
+
+
+              {/               <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8" id="delete_article_{id}">
+                <div class="modal hide" id="delete-{id}">
+                  <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Delete article</h3>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>{title}</strong>, and any associated comments?</p>
+                    {data fetch form :comments where "article_id = {id}" | > :related | ""}
+                    <textarea style="display:none" name="related_comments">{@related.id}</textarea>
+                    <input type="hidden" style="display:none" name="row_id" value="{id}">
+                    <textarea name="commands" style="display:none">
+                      {begin verbatim | process escape} 
+                        {begin deleted | if {exec delete_article id #id}}
+                          {page redirect to "/yari/articles"}
+                          {notice set value {* (:message "<strong>Success!</strong> That article has been deleted." :type :success)}}
+                        {end deleted}
+                      {end verbatim}
+                    </textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="#" class="btn">Close</a>
+                    <button class="btn btn-primary" type="submit">Confirm delete</a>
+                    </div>
+                  </div>
+                </form> }
+              </div>
+            </td>
+          </tr>
+        {end articles}
+      </tbody> 
+    </table>
+  </div>

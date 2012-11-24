@@ -1,0 +1,28 @@
+<div class="row">
+  <p class="span2">
+    <a class="title" title="{title}" href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}">{title}</a>
+  </p>
+  <div class="span2">
+    <p class="pull-right">
+
+      {begin multiday}
+      {event_start_date | time represent as "m/j"}
+      {begin end_date | if {:0000 | is in event_end_date | not}}
+      - {event_end_date | time represent as "j"}
+      {end end_date}  
+      {end multiday}
+
+      {begin oneday | if {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} | else $multiday}
+      {event_start_date | time represent as "M d, Y" | > :start | ""}
+      {time represent as "M d, Y" | > :today | ""}
+      {begin today}
+      Today
+      {end today}
+
+      {@start | is like @today | then $today | else "{event_start_date | time represent as "m/j"}"}
+      {end oneday}
+    </p>
+    <!-- <p class="time pull-right">{event_start_date | time represent as "Hi" | is like :0000 | then "All day" else "{event_start_date | time represent as "g:i a"}"}</p> -->
+
+  </div>
+</div>

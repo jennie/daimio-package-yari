@@ -1,0 +1,1 @@
+{lens get_my_posts tag #tag | > :articles}

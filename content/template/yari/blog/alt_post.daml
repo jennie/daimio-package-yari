@@ -1,0 +1,43 @@
+{lens profile_find id user_id | > :user_profile | ""}
+<div class="article {:recap | if {"recap" | is in tags.value}}">
+  <div class="summary">
+    <h3><a title="{title}" class="" href="{@SITE.path}/blog/{id}/{title | string url_encode}">{title}</a></h3>
+
+    <div class="row">
+      <div class="span6">    
+        {begin summary | if {not {#2 | is like "/^\d+$/"}}}
+          {summary | else {body | string truncate length :150} | string textile}
+
+          <a title="{title}" class="more" href="{@SITE.path}/blog/{id}/{title | string url_encode}"><i class="icon-chevron-right"></i> Read more...</a>
+
+        {end summary}
+
+        {begin full | if {#2 | is like "/^\d+$/"}}
+          {body | string textile}
+
+          <a href="http://twitter.com/share" class="twitter-share-button" data-text="From the Jeuxly blog: {title}" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+          <!-- Place this tag where you want the +1 button to render -->
+          <g:plusone size="medium"></g:plusone>
+          <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="arial"></div>
+        {end full}
+      </div>
+
+
+
+      <div class="span2">
+        <div class="row">
+
+          <p class="span2">Posted <span class="date">{publish_date | time represent as "F j"}</span><br>
+
+            <i>by</i> <a href="{@SITE.path}/blog/profile/{user_id}"> {@profile.#1.my.firstname} {@profile.#1.my.lastname}</a></p>
+
+            {begin avatar | if @profile.#1.files.my.avatar}
+              <img src="{@profile.#1.files.my.avatar}" alt="{@profile.#1.my.firstname}'s avatar" class="span1">
+            {end avatar}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>

@@ -1,0 +1,14 @@
+{begin nullblock | process consume | @return}
+  {begin nonevents}
+
+    {data fetch form :articles where {"publish_date <= '{time represent as :Y-m-d}' AND status = live"} order "publish_date DESC" limit {limit | else :10} | > :return}
+  {end nonevents}
+
+
+  {begin events | if {#tag | is like "Events"} else $nonevents}
+    {data fetch form :articles where {"publish_date <= '{time represent as :Y-m-d}' AND status = live"}  order "event_start_date ASC" limit {limit | else :10} | > :return}
+
+  {end events}
+
+
+{end nullblock}

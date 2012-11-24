@@ -1,0 +1,40 @@
+<p class="lead">All fields are optional. Information appears on your public profile and with your blog posts.</p>
+<a href="{@SITE.path}/members/profile/{@MY.id}" class="btn"><i class="icon-eye-open"></i> View public profile</a>
+{@level.{my.plan}}
+<hr>
+<form method="post" accept-charset="utf-8" enctype="multipart/form-data" class="form-vertical">
+
+
+  <h3>Account</h3>
+  <h4>Password</h4>
+
+  <div class="control-group">
+    <label class="control-label" for="newpassword">Set a new password</label>
+    <div class="controls">
+      <input type="password" value="" name="newpassword">
+    </div>
+  </div>
+  <textarea name="commands" style="display:none">
+    {begin verbatim | process escape}
+      {begin success | if {myself set_password to #newpassword}}
+        {notice set value {* (:message "<strong>Success!</strong> Your password has been changed." :type :success)}}
+      {end success}
+    {end verbatim}
+  </textarea>
+
+
+  <button type="submit" class="btn btn-primary">Save new password</button>
+
+</form>
+<h4>Membership</h4>
+
+{ifelse (
+  {@my_profile.my.plan} "<p>You're a DMG <strong>{@level.{@my_profile.my.plan}}</strong> member.</p>"
+  :default "<p>You are not currently a DMG member.</p>"
+)}
+
+{begin expiry | if @my_profile.my.expiry}
+  <p>Expiry: {@my_profile.my.expiry | time represent as "m/d/Y"}</p>
+{end expiry}
+
+

@@ -1,0 +1,18 @@
+{begin info | merge with @articles}
+  <div class="hero-unit" style="background-image:url({hero_unit}); background-repeat: no-repeat">
+    <h1>{aside}</h1>
+    <p class="date">
+      {begin multiday}
+        {event_start_date | time represent as "D, F j"}
+        {begin end_date | if {:0000 | is in event_end_date | not}}
+          - {event_end_date | time represent as "D, F j"}
+        {end end_date}  
+      {end multiday}
+      {begin oneday | if {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} else $multiday}
+        {event_start_date | time represent as "D, F j"}
+      {end oneday}
+      //
+      {event_start_date | time represent as "Hi" | is like :0000 | then "All day" else "{event_start_date | time represent as "g:i a"}"}</p>
+      
+    </div>
+  {end info}

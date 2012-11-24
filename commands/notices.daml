@@ -1,0 +1,10 @@
+{begin terminal}
+  After installing Bootstrap, cd to the root directory and run this in the terminal:
+    cat bootstrap/js/bootstrap-transition.js bootstrap/js/bootstrap-alert.js bootstrap/js/bootstrap-button.js bootstrap/js/bootstrap-carousel.js bootstrap/js/bootstrap-collapse.js bootstrap/js/bootstrap-dropdown.js bootstrap/js/bootstrap-modal.js bootstrap/js/bootstrap-tooltip.js bootstrap/js/bootstrap-popover.js bootstrap/js/bootstrap-scrollspy.js bootstrap/js/bootstrap-tab.js bootstrap/js/bootstrap-typeahead.js bootstrap/js/bootstrap-affix.js > js/bootstrap.js
+  Optionally, if uglifyjs is installed, minify the js:
+    uglifyjs -nc js/bootstrap.js > js/bootstrap.min.js
+{end terminal}
+
+{notice toss type :warning message "Yari requires Bootstrap. Get it here: https://github.com/twitter/bootstrap.git"}
+{notice toss type :warning message "You might also want Chosen for nice multi-selects. Get it here: https://github.com/harvesthq/chosen.git"}
+{notice toss type :warning message $terminal}

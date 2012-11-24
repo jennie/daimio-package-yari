@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {permit superdo command "{my set for for in in path path value value}" | > :return}
+{end nullblock}

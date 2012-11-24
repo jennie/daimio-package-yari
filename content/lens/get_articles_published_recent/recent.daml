@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {data fetch form :articles where {"publish_date <= '{time represent as :Y-m-d}' AND status = live"} order "publish_date DESC" limit {limit | else :20} | > :return}
+{end nullblock}

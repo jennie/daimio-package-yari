@@ -1,0 +1,12 @@
+{lens get_articles_published_recent | > :articles | ""}
+
+
+{/ {data fetch form :comments fields :article_id where {"article_id %= ({@articles.id | array to_csv})"} | array rekey by_key :article_id | > :comments | ""} }
+
+{merge string %template:yari/blog/alt_post with @articles}
+
+{%global/prev_next}
+
+{begin no_articles | if {not @articles}}
+  <p>There are no matching articles.</p>
+{end no_articles}

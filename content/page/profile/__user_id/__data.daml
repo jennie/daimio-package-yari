@@ -1,0 +1,2 @@
+{lens profile_find id #user_id | > :user_profile}
+{lens member_find_by_ids ids #user_id | > :member}

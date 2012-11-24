@@ -1,0 +1,8 @@
+{exec add keyword :delete_article keyholes :blogger params {* (:id "Article ID")} required 1}
+{exec add keyword :admin_my_set keyholes :admin params {* (:for "an ID" :in "A collection name" :path "Like activity.event" :value "Value to set")} required 4}
+{exec add keyword :upload_file keyholes :__member params {* (:thing "like (:profiles @MY.id)" :path "Path" :file "File")} required :3}
+{exec add keyword :admin_add_key keyholes :admin params {* (:for "User ID" :key "Key to add - admin, __world, blogger, __member, etc.")} required 2}
+{exec add keyword :set_email keyholes :__member params :to required 1 apropos "Set your email address"}
+{exec add keyword :admin_set_email keyholes :admin params (:for :to) required 2 apropos "Set someone else's email address"}
+{exec add keyword :set_event_depot keyholes :admin params {* (:event_id "Event ID" :value "Value to set in this event's depot." :path "Path")}}
+{exec add keyword :get_attendees_by_event keyholes :__world params {* (:event "Event ID")}}

@@ -1,0 +1,3 @@
+<h2>No tag specified</h4>
+  
+{%view:yari/articles/live/recent}

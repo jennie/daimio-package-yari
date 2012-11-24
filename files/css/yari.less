@@ -1,0 +1,25 @@
+@import "/css/datepicker.css";
+
+body#yari {margin-top: 60px; margin-bottom: 100px;}
+
+/* @group Data Tables */
+div.dataTables_length  {
+  label { float: left; text-align: left;}
+  select {width: 75px;}
+  div.dataTables_filter label {float: right;}
+}
+div.dataTables_info {padding-top: 8px;}
+div.dataTables_paginate { float: right; margin: 0; }
+
+table.table-data {
+  clear: both;
+  margin-bottom: 6px !important;
+  thead {
+    .sorting,.sorting_asc,.sorting_desc,.sorting_asc_disabled,.sorting_desc_disabled {cursor: pointer;*cursor: hand;}
+    .sorting {background: url('../images/datatables/sort_both.png') no-repeat center right;}
+    .sorting_asc {background: url('../images/datatables/sort_asc.png') no-repeat center right;}
+    .sorting_desc {background: url('../images/datatables/sort_desc.png') no-repeat center right;}
+    .sorting_asc_disabled {background: url('../images/datatables/sort_asc_disabled.png') no-repeat center right;}
+    .sorting_desc_disabled {background: url('../images/datatables/sort_desc_disabled.png') no-repeat center right;}
+  }
+}

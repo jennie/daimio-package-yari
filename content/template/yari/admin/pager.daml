@@ -1,0 +1,63 @@
+
+{/ TODO: count just the total for whatever we're looking at }
+
+{data count form :articles | > :count | ""}
+
+
+
+{begin previous}
+  <span class="page previous">
+    <a href="{@SITE.path}/yari/articles/page/{#page_number | -: 1}?limit={#limit | then #limit else :10}">&larr; Newer articles</a>
+  </span>
+{end previous}
+{begin next}
+  <span class="page next">
+    <a href="{@SITE.path}/yari/articles/page/{#page_number | +: 1}?limit={#limit | then #limit else :10}">Older articles &rarr;</a>
+  </span>  
+{end next}
+{begin back_to_main}
+  <span class="page previous">
+    <a href="{@SITE.path}/blog">&larr; Current articles</a>
+  </span>
+{end back_to_main}
+
+
+{$previous | if {#page_number | less than :2 | not}}
+
+{$back_to_main | if {#page_number | is like :1}}
+
+{$next | if {or (
+  {@count | less than @this_page_max | not}
+  {@count | is like @this_page_max}
+  {#page_number | not}
+
+)}}
+
+
+
+<div id="pager" class="pager">
+    <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8">
+      <input type="hidden" name="page_number" value="{#page_number}">
+      
+      
+      <div class="perpage">
+        Show
+        <select name="limit">
+          <option selected="selected" value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        per page
+      </div>
+      <button type="submit">Go</button>
+
+
+      <textarea name="commands" style="display:none">
+      {begin verbatim | process escape} 
+        {page redirect to {"/yari/articles/{#page_number}?limit={#limit}"}}
+      {end verbatim}
+    </textarea>
+  </form>
+
+</div>

@@ -1,0 +1,70 @@
+{/ THIS IS THE LAYOUT FOR YARI }
+{%metadata | process consume | ""}
+{%template:yari/admin/header}
+
+<body id="yari">
+
+  {%page/yari/navbar}
+    <div class="container">
+      <div id="content">
+      
+        <h1>{@page.title}</h1>
+        {%global/notices}
+
+
+        {begin logged_out}
+          {/ TODO: repurpose for gut reaction }
+          <form method="post" accept-charset="UTF-8" name="loginForm" id="login-form" class="form-inline">
+            <div class="modal" id="login-modal">
+
+
+              <div class="modal-header">
+
+                <h3>Welcome to Yari!</h3>
+              </div>
+              <div class="modal-body">
+                {%global/notices}
+
+                <input type="text" class="input-medium" placeholder="Username" name="username">
+                <input type="password" class="input-medium" placeholder="Password" name="password">
+                <label class="checkbox">
+                  <input type="checkbox" name="keep" id="keep" value="60"> Remember me
+                </label>
+
+
+                <textarea name="commands" style="display:none">
+                  {begin verbatim | process escape}
+                    {if {myself authenticate username #username password #password days #keep}
+                    then "{page redirect to :yari}{notice set to "Logged in!"}"
+                  }
+                {end verbatim}
+              </textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" name="login_form_submit" value="Log In" id="login_form_submit" class="btn btn-primary submit">Log in</button>
+            </div>
+
+          </div>
+        </form>
+
+      {end logged_out}
+
+      {ifelse (
+        {@MY.id} "{%copy}"
+        :default $logged_out
+      )}
+
+
+
+    </div>
+
+  </div>
+
+
+
+  {%global/logout}
+  {%global/js}
+  {%page/yari/bonus_js}
+  {%template:yari/admin/footer}
+</body>
+</html>

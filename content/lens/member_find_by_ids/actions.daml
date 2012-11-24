@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {permit superdo command "{member find by_ids ids}" | > :return}
+{end nullblock}

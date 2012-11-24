@@ -1,0 +1,7 @@
+<div class="messagebox mtag">
+  <h3>Attach a photo</h3>
+  <p>Showcase photos for this event by tagging them on <a href="http://flickr.com/">flickr.com</a> with this machine tag:</p>
+  <span class="mtag wrapper">
+    <input value="spiritfire:post={id}" id="mtag" class="select" readonly="readonly" type="text" onfocus="this.select();" onclick="this.select();">
+  </p>
+</div>

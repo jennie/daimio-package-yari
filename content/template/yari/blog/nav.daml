@@ -1,0 +1,7 @@
+<ul id="primary-nav">
+  <li class="{#1 | is like "" | then "current"}"><a href="{@SITE.path}/" class="primary">Home</a></li>
+  <li class="{#1 | is like "about" | then "current"}"><a href="{@SITE.path}/about" class="primary">About</a></li>
+  <li class="{#1 | is like "services" | then "current"}"><a href="{@SITE.path}/services" class="primary">Services</a></li>
+  <li class="{#1 | is like "blog" | then "current"}"><a href="{@SITE.path}/blog" class="primary">Blog</a></li>
+  <li class="{#1 | is like "contact" | then "current"}"><a href="{@SITE.path}/contact" class="primary">Contact</a></li>
+</ul>

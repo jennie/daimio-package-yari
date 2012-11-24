@@ -1,0 +1,28 @@
+{lens get_articles_published_recent | > :feed | ""}<?xml version="1.0" encoding="UTF-8"?>
+
+{%template:yari/site_config | process consume | ""} 
+
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <atom:link href="{@SITE.path}/rss/" rel="self" type="application/rss+xml" />
+    <title>{@yari.site.name}</title>
+    <link>{@SITE.path}</link> 
+    <description>Bento Miso Blog</description>
+    <language>en-us</language>
+    {begin feed | merge with @feed}
+      <item>
+        <title>{title}</title>
+        <link>{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}</link>
+        <description>
+          <![CDATA[
+          {body | string textile}
+          ]]>
+        </description>
+        <dc:creator>{@yari.client.name}</dc:creator>
+        <dc:date>{publish_date | time represent as "c"}</dc:date>
+        <guid>{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}</guid>
+
+      </item>
+    {end feed}
+  </channel>
+</rss>

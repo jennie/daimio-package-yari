@@ -1,0 +1,50 @@
+{/ THIS IS SUPER OLD. Do not use.  }
+
+{%data_config-on-yari}
+
+{%paypalconfig-on-shop}
+
+{/article detail}
+
+{begin article_detail | if {and ({#2 | is like :write} {#3 | is like "/^\d+$/"})}}
+  {data fetch form :articles where "id = {#3}" order "publish_date DESC" limit :1 | > :articles}
+  {data fetch form :comments where {"{#3} %= ({@articles.id | array to_csv})"} | array rekey by_key :article_id | > :comments}
+{end article_detail}
+
+{/article overview}
+{begin article_overview | if {#2 | is like "articles"}}
+  {data fetch form :articles order "publish_date DESC" where "tags != eventdate AND tags != class" | > :articles}
+  {data fetch form :comments | > :comments}
+  {data fetch form :comments where {"{id} %= ({@articles.id | array to_csv})"} | array rekey by_key :article_id | > :article_comments}
+{begin tags | if {#3 | is like "tag"}}
+  {data fetch form :articles where "tag = {#4}" order "publish_date DESC" | > :articles}
+{end tags}
+{end article_overview}
+
+
+
+"}
+{/ products overview}
+{{#2 | is like :shop} | then "
+  {data fetch form :products | > :products}
+"}
+
+{/ product detail}
+{if {and ({#2 | is like :product} {#3 | is like "/^\d+$/"})} | then "
+  {data fetch form :products where "id = {#3}" | > :product}
+"}
+
+
+{/user ids}
+{({@articles.user_id} {@comments.*.user_id}) | array union | array unique | > :user_ids}
+
+{/profiles}
+{data fetch form :profiles where {"user_id %= ({@user_ids | array to_csv})"} | array rekey by_key :user_id | > :profiles}
+
+{/profiles}
+{data fetch form :profiles where "user_id = {@MY.id}" | __pipe.#1 | > :my}
+
+{/ classes}
+  {data fetch form :articles where "tags = class" | > :class_list}
+
+

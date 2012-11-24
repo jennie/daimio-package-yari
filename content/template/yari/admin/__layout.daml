@@ -1,0 +1,43 @@
+{%template:yari/admin/header}
+{%global/metadata | process consume | ""}
+
+<body id="{#2 | else "home"}">
+  {%template:yari/admin/notices}
+  {begin logged_in | if {:blogger | is in @MY.keychain} | else "{%template:yari/admin/login}"}
+  <div id="standard_header">
+    <h1 class="standard"><span class="domain">{@yari.site.name}</span></h1>
+    <div id="account">
+      <form method="POST">
+        <input type="submit" name="logout_button" value="Log out" class="submit button" id="logout_button">
+        <textarea type="hidden" name="commands" id="commands" style="display:none;">
+        {begin verbatim | process escape} 
+          {myself logout}
+          {notice set value "You are now logged out of Yari."}
+          {page redirect to :yari}
+        {end verbatim}
+        </textarea>
+      </form>
+      <span>Welcome, <a href="#" onclick="$('#my-profile').toggle();return false;">{@my.firstname} {@my.lastname} {not @my.firstname | then "{@MY.username}"}</a></span>
+    </div>
+  </div>
+  <div id="my-profile" style="display:none;">
+      <div class="cap"></div>
+{data fetch form :profiles where "user_id = {@MY.id}" limit :1 fields :id | > :myprofile | ""}
+{form display keyword :profiles row "{@myprofile.id | array to_csv}"}
+
+<span class="cancel-option">or <span class="cancel" onclick="$('#my-profile').hide();$('#my-profile form')[0].reset();">cancel</span></div>
+  {%template:yari/admin/nav}
+  <div id="content" class="{begin write_block | if {@PAGE.path | is like "/^yari\/write/"}}{@articles.{#3}.status} {if {not {#3 | is like "/^\d+$/"}} then :draft else ""}{end write_block}">
+    {%copy}
+  </div>
+  {end logged_in}
+  
+  
+  {%template:yari/admin/footer}
+  {%global/signout}
+  {%global/js}
+  {%bonus_js}
+
+  
+</body>
+</html>

@@ -1,0 +1,17 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="{@SITE.path}/yari"><strong>Yari</strong> {@my_profile.my.firstname} {@my_profile.my.lastname}</a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+          <li><a href="{@SITE.path}/members/profile/edit"><i class="icon-user"></i>  Profile</a></li>
+          <li><a href="{@SITE.path}/yari/articles">Blog Posts</a></li>
+          <li><a href="{@SITE.path}/yari/articles">Pages</a></li>
+          <li class="divider-vertical"></li>
+          <li><a href="#" onclick="$('#logout').submit();">Log out <i class="icon-share-alt"></i></a></li>
+          <li><a href="{@SITE.path}">Back to site <i class="icon-arrow-right"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

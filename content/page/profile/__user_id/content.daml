@@ -1,0 +1,59 @@
+{begin profile | merge with @user_profile}
+      <h1>{my.firstname} {my.lastname}</h1>
+        <div class="row">
+    <div class="span3 avatar">
+      {begin placeholder}
+        <img src="http://placehold.it/280x250/ffcc00/de4561&text={my.firstname}" alt="{my.firstname}'s avatar">
+      {end placeholder}
+      {begin avatar | if files.my.avatar else $placeholder}
+        <img src="{files.my.avatar}" alt="{my.firstname}'s avatar">
+      {end avatar}
+    </div>
+    <div class="span5">
+
+      <div class="bio">
+        {my.bio | string textile}
+      </div>
+      <div class="skills">
+        <h3>Skills</h3>
+        {begin tags | foreach with tags}
+          <span class="badge">{value}</span>
+        {end tags}
+      </div>
+    </div>
+  </div>
+  <div class="row social">
+    <div class="span4">
+      <h3>Social</h3>
+      {begin twitter | if my.social.twitter}
+        <p class="row">
+          <span class="span1 social-name">
+            <em class="social-label">twitter:</em>
+          </span>
+          <span class="span1 social-link">
+            <a class="" href="http://twitter.com/{my.social.twitter}">@{my.social.twitter}</a>
+          </span>
+        </p>
+      {end twitter}
+
+      {begin site | if my.website}
+        <p class="row">
+          <span class="span1 social-name">
+            <em class="social-label">web site:</em>
+          </span>
+          <span class="span1 social-link">
+            <a class="" href="{"http" | is in my.website | then "{my.website}" else "http://{my.website}"}">{my.website}</a>
+          </span>
+        </p>
+      {end site}
+    </div>
+    </div>
+    <div class="row">
+      <div class="span8">
+         <h3>Articles by {my.firstname}</h3>
+            {%view:yari/articles/live/by_user_list}
+      </div>
+    </div>
+   
+
+{end profile}

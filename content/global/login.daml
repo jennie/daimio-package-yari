@@ -1,0 +1,28 @@
+<form method="post" accept-charset="utf-8" enctype="multipart/form-data">
+  <div class="control-group {@ERRORS.myself.authenticate | then "error"}">
+    <input type="text" class="input span3" name="username" placeholder="Username">
+  </div>
+  <div class="control-group {@ERRORS.myself.authenticate | then "error"}">
+    <input type="password" class="input span3" name="password" placeholder="Password">
+  </div>
+  <label class="checkbox">
+    <input type="checkbox" name="days" value="30"> Keep me logged in for 30 days.
+  </label>
+  {begin member | if {#1 | is like :member}}
+    {/ <label class="checkbox">
+      <input type="checkbox" name="checkin" value="1"> I'm at Miso right now - check me in.
+    </label> }
+  {end member}
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Log in</button>
+  </div>
+  <textarea name="commands" style="display:none">
+    {begin verbatim | process escape}
+      {begin success | if {myself authenticate username #username password #password days #days} else "{notice set value {* ( :message "<strong>oops!</strong> You mistyped your username or password! Please try again." :type :error)}}"}
+        {/ {begin check_me_in | if #checkin}
+          {member in}
+        {end check_me_in} }
+      {end success}
+    {end verbatim}
+  </textarea>
+</form>

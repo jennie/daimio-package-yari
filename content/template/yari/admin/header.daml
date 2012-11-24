@@ -1,0 +1,22 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="google-site-verification" content="">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <title>
+    DMG Toronto: Yari
+  </title>
+
+  <link rel="stylesheet" href="{@SITE.path}/css/bootstrap.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="{@SITE.path}/css/members.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="{@SITE.path}/css/yari.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="{@SITE.path}/css/datepicker.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  
+  <!-- <link rel="stylesheet" href="{@SITE.path}/css/styles.css" type="text/css" media="screen" title="no title" charset="utf-8"> -->
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss/">
+
+</head>

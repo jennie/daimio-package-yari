@@ -1,0 +1,3 @@
+{begin nullblock | process consume | @return}
+  {permit superdo command "{user add_key for #username key #key}" | > :return}
+{end nullblock}

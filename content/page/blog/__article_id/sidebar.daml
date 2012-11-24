@@ -1,0 +1,5 @@
+<hr>
+{%sidebarphotos}
+
+{// {/ {%view:yari/widgets/tag_cloud} } //}
+{%view:yari/widgets/date_list}

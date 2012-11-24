@@ -1,0 +1,82 @@
+
+
+{data fetch form :comments | > :comments | ""}
+
+{data fetch form :comments where {"{id} %= ({@articles.id | array to_csv})"} | collection sort by {* (:cron :desc)} | array rekey by_key :article_id | __pipe.#1 | > :comments | ""}
+
+{article_id}
+
+{begin comment_block | if {or ({@articles.#1.allow_comments | is like "1"} {@comments})}}
+  <div id="comments">
+    <h3>Comments <span class="count">{@allcomments | array count}</span></h3>
+    <a name="#comments"></a>
+
+      {%global/notices}
+
+
+
+    {begin comment_form | if {@articles.#1.allow_comments | is like "1"}}
+      {begin add_comment | if {@MY.id}}
+        <!-- I'm leaving this more or less like I found it, to avoid causing any CSS incompatibilities... -->
+        <form method="post" ENCTYPE="multipart/form-data"  accept-charset="utf-8" class="autoform">
+          <div class="comment">
+            <span class="comment-body">
+
+              <h5>You are logged in as {@MY.username} (<span onclick="$('#logout').submit();" class="logout">logout</span>). Your comment...</h5>
+              <span class="w"><textarea name="body" id="comment_body" class="text"></textarea></span>
+            </span>
+            <textarea name="commands" style="display:none">
+              {begin verbatim | process escape}
+                {begin success | {if {data input form :comments values @POST}}}
+                  {notice set value {* (
+                    :message "<strong>Success!</strong> Your comment has been added."
+                    :type :success
+                  )}}
+                  {page redirect to {"blog/{#2}"}}
+              {end success}  
+
+            {end verbatim}
+            </textarea>
+            <input type="hidden" name="article_id" id="article_id" value="{#2}">
+            <input type="submit" name="submit" value="Post comment" class="btn btn-primary">
+          </div>
+        </form>
+      {end add_comment}
+
+
+    {begin login | if {not {@MY.id}}}
+      <form class="well form-inline">
+        <input type="text" class="input-medium" placeholder="Username" name="username">
+        <input type="password" class="input-medium" placeholder="Password" name="password">
+        <label class="checkbox">
+          <input type="checkbox" name="days"> Remember me
+        </label>
+        <button type="submit" class="btn btn-success">Sign in</button>          
+        <textarea name="commands" style="display:none">
+          {begin verbatim | process escape}
+            {if {myself authenticate username #username password #password days #days}
+            then "{page redirect to :yari}{notice set to "Logged in!"}"
+          }
+        {end verbatim}
+      </textarea>      
+    </form>
+  {end login}
+{end comment_form}
+
+
+{begin comment_view | merge with @comments}
+  <div class="previous_comment">
+    <p class="posted">
+      <span class="username">{@profiles.{user_id}.#1.firstname} {@profiles.{user_id}.#1.lastname}</span>
+      <span class="date">{cron | time represent as "F j, Y g:i a"}</span>
+    </p>
+    <span class="comment-body">
+
+      {body | string textile}
+
+    </span>
+  </div>
+{end comment_view}
+
+</div>
+{end comment_block}

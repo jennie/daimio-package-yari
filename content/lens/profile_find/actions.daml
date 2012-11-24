@@ -1,0 +1,7 @@
+{begin nullblock | process consume | @return}
+  {ifelse (
+    {id} "{permit superdo command "{profile find by_ids id | > :return}"}"
+    {options} "{permit superdo command "{profile find options options | > :return}"}"
+    :default "{permit superdo command "{profile find | > :return}"}"
+  )}
+{end nullblock}

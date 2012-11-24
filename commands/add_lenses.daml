@@ -1,0 +1,7 @@
+{lens add keyword :get_my_posts keyholes :blogger description "Get all of my blog posts." params {* (:tag "Tag" :limit "Limit" :sort "sort order")}}
+{lens add keyword :member_find_by_ids keyholes :__world params {* (:ids "A single ID or array")}}
+{lens add keyword :profile_find keyholes :__world params {* (:id "A single ID or array")} required 1}
+{lens add keyword :get_articles_by_tag keyholes :blogger params {* (:tag "Tag" :limit "Limit")} required :1 }
+{lens add keyword :get_past_events keyholes :__world params {* (:limit "Limit")}}
+{lens add keyword :get_future_events keyholes :__world params {* (:limit "Limit")}}
+{lens add keyword :get_attendees_by_event keyholes :__world params {* (:event "Event ID")}}

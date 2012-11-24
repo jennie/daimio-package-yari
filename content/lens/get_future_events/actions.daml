@@ -1,0 +1,5 @@
+{begin nullblock | process consume | @return}
+
+
+{data fetch form :articles where {"tags = Events AND status = live AND publish_date <= '{time represent as :Y-m-d}' AND event_end_date >= '{time represent as :Y-m-d}'"} order "event_start_date ASC" limit {limit | else :20} | > :return}
+{end nullblock}

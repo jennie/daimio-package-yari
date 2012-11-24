@@ -1,0 +1,46 @@
+{lens get_future_events | extract "{this.event_start_date | time represent | logic less than {"+ 7 days" | time represent}}" | > :feed | ""}<?xml version="1.0" encoding="UTF-8"?>
+
+{%template:yari/site_config | process consume | ""} 
+
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <atom:link href="{@SITE.path}/rss/thisweek" rel="self" type="application/rss+xml" />
+    <title>{@yari.site.name} Events</title>
+    <link>{@SITE.path}</link> 
+    <description>This week's events at Bento Miso</description>
+    <language>en-us</language>
+    {begin feed | merge with @feed}
+      <item>
+        <title>{title}</title>
+        <link>{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}</link>
+        <description>
+          <![CDATA[
+
+          <p style="margin:0;">
+            <strong style="font-size:14px">{begin multiday}
+              {event_start_date | time represent as "D., F j"}
+              {begin end_date | if {:0000 | is in event_end_date | not}}
+                - {event_end_date | time represent as "D., F j"}
+              {end end_date}  
+            {end multiday}
+            {begin oneday | if {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} else $multiday}
+              {event_start_date | time represent as "D., F j"}
+            {end oneday} - {event_start_date | time represent as "Hi" | is like :0000 | then "All day" else "{event_start_date | time represent as "g:i a"}"}
+            </strong>
+
+            <br>
+            {summary}
+          </p>
+          ]]>
+        </description>
+
+        <dc:creator>{@yari.client.name}</dc:creator>
+        <pubDate>{{"- {:now | +: 1} days"} | time represent as "c"}</pubDate>
+
+        <dc:date>{{"- {:now | +: 1} days"} | time represent as "c"}</dc:date>
+        <guid>{@SITE.path}/blog/{id}/{title | string url_encode}</guid>
+
+      </item>
+    {end feed}
+  </channel>
+</rss>

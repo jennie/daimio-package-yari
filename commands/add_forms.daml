@@ -1,0 +1,51 @@
+{form add keyword :articles}
+{form set_perms for :articles type :delete keyholes "__owner admin"}
+{form set_perms for :articles type :edit keyholes "__owner admin"}
+{form set_perms for :articles type :add keyholes :blogger}
+{form set_perms for :articles type :read keyholes "__lens blogger"}
+
+{field add form :articles keyword :title type :varchar name "Title" input_extensions :not_null decorator "<input type="text" name="title" id="title" class="text" value="{value}">"}
+{field add form :articles keyword :body type :content_dirty name "Body" input_extensions :not_null}
+{field add form :articles keyword :summary type :text_dirty name "Summary"}
+{field add form :articles keyword :username type :username name "Username"}
+{field add form :articles keyword :publish_date type :datetime name "Publish Date" decorator "<input type="text" name="publish_date" class="datetime" id="publish_date" value="{value | else :now | time represent as "F j, Y"}">"}
+{field add form :articles keyword :allow_comments type :cxbx_single name "Allow Comments"}
+{field add form :articles keyword :status type :pulldown_varchar name "Status" options (:draft :live :hidden)}
+{field add form :articles keyword :url_title type :varchar name "URL Title"}
+{field add form :articles keyword :tags type :tags_comma name "Tags" description "Separate tags with commas like this: News, Current events, Marketing tips for writers" decorator "<textarea name="tags" id="tags" class="tags">{value}</textarea><p class="description">{description}</p>"}
+{field add form "articles" keyword "event_start_date" type "datetime" name "Event start"}
+{field add form "articles" keyword "event_end_date" type "datetime" name "Event end"}
+
+
+{form add keyword :comments}
+{form set_perms for :articles type :delete keyholes :blogger}
+{form set_perms for :articles type :edit keyholes "__owner blogger"}
+{form set_perms for :articles type :add keyholes :__member}
+{form set_perms for :articles type :read keyholes :__world}
+
+{field add form :comments keyword :body type :text name "Body" input_extensions :not_null}
+{field add form :comments keyword :article_id type :hidden name "Article ID" input_extensions :not_null}
+{field add form :comments keyword :cron type :creationdate name "cron"}
+
+
+{form add keyword :profiles}
+{form set_input_extensions for :profiles to :unique}
+{form set_perms for :articles type :delete keyholes :none}
+{form set_perms for :articles type :edit keyholes "__owner admin"}
+{form set_perms for :articles type :add keyholes "__member admin"}
+{form set_perms for :articles type :read keyholes :__world}
+
+{field add form :profiles keyword :firstname type :varchar name "First Name" input_extensions :not_null decorator "<input type="text" name="firstname" id="firstname" value="{value}">"}
+{field add form :profiles keyword :lastname type :varchar name "Last Name"  input_extensions :not_null decorator "<input type="text" name="lastname" id="lastname" value="{value}">"}
+
+
+{form add keyword :images}
+{form set_perms for :images type :delete keyholes :__owner}
+{form set_perms for :images type :edit keyholes "__owner blogger"}
+{form set_perms for :images type :add keyholes :__member}
+{form set_perms for :images type :read keyholes :__world}
+
+{field add form :images keyword :image type :file_json name "Image"}
+{field add form :images keyword :alt type :varchar name "Alt text"}
+{field add form :images keyword :cron type :creationdate name "Date uploaded"}
+{field add form "images" keyword "tags" type "tags_comma" name "tags"}

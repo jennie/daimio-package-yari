@@ -1,0 +1,181 @@
+<div class="container">
+  <h1>My Profile</h1>
+  <div class="row">
+    <div class="sidebar span4">{%sidebar}</div>
+    <div class="content span8">
+
+
+      <form class="form-vertical" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+
+
+        <div class="row"> 
+          <span class="span3">
+            <div class="image control-group">
+              {begin placeholder}
+                <img src="holder.js/280x250/text:{@my_profile.my.firstname}/{@my_profile.my.plan}">
+              {end placeholder}
+              {begin avatar | if @my_profile.files.my.avatar else $placeholder}
+                <img src="{@my_profile.files.my.avatar}" width="180" alt="{@my_profile.my.firstname}'s avatar" class="thumbnail">
+              {end avatar}
+              <div class="avatar"></div>
+
+              <div class="control-group">
+                <label for="avatar" class="control-label">Current Photo</label>
+                <div class="controls">
+                  <input type="file" class="file" name="avatar" id="avatar">
+                  <p class="help-block"><strong>Upload a photo</strong>You can upload a JPG, GIF or PNG file.</p>
+                </div>
+              </div>
+
+
+
+
+            </div>
+          </span>
+          <div class="control-group span5">
+
+
+            <div class="control-group">
+              <label class="control-label" for="firstname">First name</label>
+              <div class="controls">
+                <input type="text" class="span5" id="firstname" name="my[firstname]" value="{@my_profile.my.firstname}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="lastname">Last name</label>
+              <div class="controls">
+                <input type="text" class="span5" id="lastname" name="my[lastname]" value="{@my_profile.my.lastname}">
+              </div>
+            </div>
+
+
+            <label class="control-label" for="textarea">A short bio</label>
+            <div class="controls">
+              <textarea class="span5" id="bio" rows="7" name="my[bio]">{@my_profile.my.bio}</textarea>
+            </div>
+          </div>
+        </div>
+
+        {/ PERSONAL }
+        <fieldset>
+          <div class="row">
+            <div class="span8">
+              <legend>Social</legend>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="span4">
+              <div class="control-group">
+                <label class="control-label" for="website">Web site</label>
+                <div class="controls">
+                  <input type="text" class="span4" id="website" name="my[website]" value="{@my_profile.my.website}">
+                </div>
+              </div>
+
+
+              <div class="control-group">
+                <label class="control-label" for="twitter">Twitter</label>
+                <div class="controls">
+                  <div class="input-prepend">
+                    <span class="add-on">@</span><input type="text" class="span3" id="twitter" name="my[social][twitter]" value="{@my_profile.my.social.twitter}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="span4">
+              {// <h4>Gamertags</h4> //}
+              <div class="control-group">
+                <label class="control-label" for="xbox">Xbox </label>
+                <div class="controls">
+                  <input type="text" class="span4" id="xbox" name="my[social][xbox]" value="{@my_profile.my.social.xbox}">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label" for="psn">PSN</label>
+                <div class="controls">
+                  <input type="text" class="span4" id="psn" name="my[social][psn]" value="{@my_profile.my.social.psn}">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label" for="steam">Steam</label>
+                <div class="controls">
+                  <input type="text" class="span4" id="steam" name="my[social][steam]" value="{@my_profile.my.social.steam}">
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+        </fieldset>
+        {// $('<p>Test</p>').appendTo('.inner'); //}
+        {/ PROFESSIONAL }
+        <fieldset>
+          <div class="row">
+            <div class="span8">
+              <legend>Skills &amp; Collab Wish List</legend>
+            </div>
+          </div>
+
+
+
+          <div class="control-group">
+            <h4>My skill inventory:</h4>
+            <div class="controls">
+
+              <select data-placeholder="Start typing..." multiple="multiple" tabindex="3" class="skills span8" name="my[skills][]" id="skills">
+                {begin skills | foreach with @skills as :skill_value and :skill_key} 
+                  <optgroup label="{skill_value.name}">
+                    {begin list | foreach with skill_value.values}
+                      <option value="{value}" {value | is in @my_profile.my.skills | then "selected"}>{value}</option>
+                    {end list}
+                  </optgroup>
+                {end skills}
+              </select>
+
+            </div>
+
+
+            {// looking for... //}
+
+            <div class="control-group">
+              <h4 class="control-label" for="tags">Collaborator wish list:</h4>
+              <p class="help-block">Looking for someone to work with on a game project? List the skills you're looking for:</p>
+              <div class="controls">
+
+                <select data-placeholder="Start typing..." multiple="multiple" tabindex="3" class="skills span8" name="my[collabwishlist][]" id="collabwishlist">
+                  {begin collabwishlist | foreach with @skills as :skill_value and :skill_key}
+                    <optgroup label="{skill_value.name}">
+                      {begin list | foreach with skill_value.values}
+                        <option value="{value}" {value | is in @my_profile.my.collabwishlist | then "selected"}>{value}</option>
+                      {end list}
+                    </optgroup>
+                  {end collabwishlist}
+                </select>
+
+              </div>
+            </div>
+
+          </div>
+        </fieldset>
+        <textarea name="commands" style="display:none">
+          {begin verbatim | process escape}
+            {begin ham | foreach with #my}
+              {my set for @MY.id in :profiles path key value value}
+            {end ham}
+            {exec upload_file thing (:profiles @MY.id) path :my.avatar file :avatar}
+            {notice set value {* (:message "<strong>Success!</strong> Your changes have been saved." :type :success)}} 
+          {end verbatim}     
+        </textarea>
+        <input type="submit" class="btn btn-primary btn-large" value="Save changes">
+      </div>
+    </form>
+  </div>
+</div>

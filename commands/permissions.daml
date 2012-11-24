@@ -1,0 +1,14 @@
+{daimio set_permission handler :user method :add keyholes :__world}
+
+{daimio set_permission handler :user method :fetch keyholes :admin}
+{daimio set_permission handler :user method :add_key keyholes :admin}
+{daimio set_permission handler :user method :disable keyholes :admin}
+{daimio set_permission handler :user method :undisable keyholes :admin}
+{daimio set_permission handler :ticket method :find keyholes (:__lens :__exec :admin)}
+
+{daimio set_permission handler :content method :set_value keyholes :admin}
+
+{page set_keyholes for (:yari/pages :yari/settings) to :admin}
+
+{daimio freshen_commands}
+

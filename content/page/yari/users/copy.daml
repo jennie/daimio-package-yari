@@ -1,0 +1,133 @@
+<h1>Users</h1>
+<div class="row">
+  <div class="span4">
+    <h4>Add New User</h4>
+    <div id="addform" title="Add new user">
+      <form method="post" accept-charset="utf-8">
+        <div class="control-group">
+          <label class="control-label" for="username">Username</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="username" name="username">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="password">Password</label>
+          <div class="controls">
+            <input type="password" class="input-xlarge" id="password" name="password">
+          </div>
+        </div>
+        {begin perms}
+          <div class="control-group">
+            <label class="control-label" for="permission">Permissions</label>
+            <div class="controls">
+              <label class="radio">
+                <input type="radio" name="key" value="blogger" {:blogger | is in @user.keychain | then "checked"}>
+                <strong>Blogger:</strong> can publish and edit their own blog posts and upload images.
+              </label>
+              <label class="radio">
+                <input type="radio" name="key" value="commenter" {:commenter | is in @user.keychain | then "checked"}>
+                <strong>Commenter:</strong> can add comments to blog posts
+              </label>
+              <label class="radio">
+                <input type="radio" name="key" value="admin" {:admin | is in @user.keychain | then "checked"}>
+                <strong>Admin:</strong> can also add, view and edit all blog posts; edit Pages; and view, edit, and add users.
+              </label>
+            </div>
+          </div>
+        {end perms}
+        {$perms}
+        <!-- You can put whatever fields you want here: if they're in the profile form, it should work fine -->
+        <div class="control-group">
+          <label class="control-label" for="firstname">First name</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="firstname" name="firstname">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="lastname">Last name</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" id="firstname" name="lastname">
+          </div>
+        </div>
+        <button input type="submit" value="Add" class="btn btn-primary save">Save</button>
+        <textarea name="commands" style="display:none;">
+          {begin verbatim | process escape}
+            {member register username #username password #password | > :newuser}
+            {exec admin_add_key for #username key #key}
+            {exec admin_my_set for @newuser in :profiles path :firstname value #firstname}
+            {exec admin_my_set for @newuser in :profiles path :lastname value #lastname}  
+          {end verbatim}
+        </textarea>
+      </form>
+    </div>
+  </div>
+  <div class="span8">
+    {lens profile_find | > :profiles | ""}
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Real Name</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Added on</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {begin profiles | merge with @profiles}
+          {lens member_find_by_ids ids _id | __pipe.#1 | > :member | ""}
+          {user fetch where "id = {@member._id}" | __pipe.#1 | > :user | ""}
+          <tr class="{{not {@user.disabled | is like :0}} | then "disabled"}" id="row-{id}">
+            <td class="title"><span>{my.firstname} {my.lastname}</span></td>
+            <td>{@user.username}</td>
+            <td>
+              <ul>{begin keys | foreach with @user.keychain}
+              <li>{value}</li>
+            {end keys}
+          </ul></td>
+          <td class="date">{@member.cron.sec | time represent as "F j, Y"}</td>
+          <td class="actions">
+            <a class="btn" data-toggle="modal" href="#edit-user-{@member._id}">Edit</a>
+            <form method="post" accept-charset="UTF-8" name="" id="" class="form-inline">
+              <div class="modal hide fade" id="edit-user-{@member._id}">
+                <div class="modal-header">
+                  <h3>Editing user {username}</h3>
+                </div>
+                <div class="modal-body">
+                  {%global/notices}
+                  <div class="control-group">
+                    <label class="control-label" for="my[firstname]">First name</label>
+                    <div class="controls">
+                      <input type="text" class="input-xlarge" id="firstname" value="{my.firstname}" name="firstname">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="lastname">Last name</label>
+                    <div class="controls">
+                      <input type="text" class="input-xlarge" id="lastname" value="{my.lastname}" name="lastname">
+                    </div>
+                  </div>
+                  {$perms}
+                  <input type="hidden" name="user_id" value="{@member._id}" id="">
+                  <input type="hidden" name="username" value="{@user.username}" id="username">
+                  <textarea name="commands" style="display:none">
+                    {begin verbatim | process escape}
+                      {exec admin_my_set for #user_id in :profiles path :firstname value #firstname}
+                      {exec admin_my_set for #user_id in :profiles path :lastname value #lastname}
+                      {exec admin_add_key for #username key #key}
+                      {notice set value {* (:message "<strong>Success!</strong> Your changes have been saved." :type :success)}}
+                    {end verbatim}
+                  </textarea>
+                </div>
+                <div class="modal-footer">
+                  <button input type="submit" value="Add" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </td>
+      </tr>
+    {end profiles}
+  </tbody>
+</table>
+</div>

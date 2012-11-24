@@ -1,0 +1,108 @@
+  <h1>Images</h1>
+  
+  {data fetch form :images where {"id = {id}"} | > :image | ""}
+{%global/notices}
+
+<div class="span12">
+
+<p class="pull-right">  <a href="#add-new-image" data-toggle="modal" class="btn btn-large btn-success">Upload an image</a></p>
+
+    <div class="modal hide" id="add-new-image">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Add image</h3>
+      </div>
+      <div class="modal-body">
+        {form display keyword :images}
+      </div>
+    </div> 
+  </div>
+
+
+
+
+<div class="span12">
+  {%pager}
+  <table class="table table-striped table-condensed table-data">
+    <thead>
+      <tr>
+        <th class="thumb">Thumb</th>
+        <th class="path">Path</th>
+        <th class="date">Uploaded on</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {begin images | merge with @images}
+        <tr id="row-{id}">
+          <td><img src="{image.url}" alt="{alt}" style="max-width:100px;"></td>
+          <td>
+            <h4>Textile</h4>
+            <textarea class="copy_url" onclick="$(this).select();" readonly="readonly">!{image.url}!</textarea>
+            
+            <h4>HTML</h4>
+            <textarea class="copy_url" onclick="$(this).select();" readonly="readonly"><img src="{image.url}" alt="{alt}"></textarea>
+            </td>
+
+          <td>{cron | time represent as "F j, Y"}</td>
+          <td>
+            <div class="btn-toolbar" style="margin-bottom: 9px">
+              <div class="btn-group">
+                <a class="btn" data-toggle="modal" href="#edit-{id}"><i class="icon-pencil"></i></a>
+                <a class="btn" data-toggle="modal" href="#delete-{id}"><i class="icon-trash"></i></a>
+              </div>
+
+
+              <div class="modal hide" id="edit-{id}">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal">×</a>
+                  <h3>Edit image</h3>
+                </div>
+
+                <div class="modal-body">
+
+                  <img src="{image.url}" alt="{alt}">
+
+                  {form display keyword :images row id}
+                </div>
+              </div>
+
+
+
+              <div class="modal hide" id="delete-{id}">
+                <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8" id="delete_image_{id}">
+
+                  <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Delete image</h3>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>{title}</strong>?</p>
+                    {data fetch form :comments where "article_id = {id}" | > :related | ""}
+                    <textarea style="display:none" name="related_comments">{@related.id}</textarea>
+                    <input type="hidden" style="display:none" name="row_id" value="{id}">
+                    <textarea name="commands" style="display:none">
+                      {begin verbatim | process escape} 
+                        {if {data destroy form :images rows #row}
+                        then "{page redirect to {"yari/images/"}{notice set value "Image deleted!"}}"
+                      }
+                    {end verbatim}
+                  </textarea>
+                </div>
+                <div class="modal-footer">
+                  <a href="#" class="btn">Close</a>
+                  <button class="btn btn-primary" type="submit">Confirm delete</a>
+                  </div>
+
+                </form>
+              </div>
+            </td>
+          </div>
+        </td>
+      </tr>
+
+    {end images}
+  </tbody>
+</table>
+</div>
+

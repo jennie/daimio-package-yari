@@ -1,0 +1,8 @@
+{begin block | merge with @image}
+  <img src="{image.url}" alt="{alt}">
+  <h3>{alt}</h3>
+  <h3>{subpage_handle}</h3>
+
+  {form display keyword :images row #id}
+
+{end block}

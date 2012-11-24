@@ -1,0 +1,115 @@
+{%global/metadata | process consume | %template:yari/blog/header}
+<body class="blog" id="{@PAGE.path | string transform old "/(\/|__)/" new ""}">
+  <div class="wrapper">
+    <div id="header">
+      <div id="topofpage">
+        <a href="{@SITE.path}/" title="home"><img src="/images/audit_tree_logo.png" alt="Audit Tree Logo" id="logo"></a>
+        <div id="promo">{%global/promo}</div>
+        <div id="nav">
+          {%template:yari/blog/nav}
+        </div>
+      </div>
+      <div id="banner">
+        <div class="col" id="intro">
+          {%intro | string textile}
+        </div>
+      </div> 
+    </div>
+    <div class="container">
+      <div class="page">
+        <div id="main">
+          <div class="content">
+            {begin blog | if {#1 | is like :blog} | else "{%copy}"}
+              {begin overview | if {not #2}}
+                {%copy}
+              {end overview}
+              <div id="entries">
+                {%body}
+              </div>
+            {end blog}
+          </div>
+        </div>
+        <div id="blog-nav">
+          {%template:yari/blog/sidebar}
+        </div>
+      </div> 
+    </div>
+  </div>
+
+  <div id="footer" class="section">
+    {begin extras | if {#1 | is like :pscbanff2011 | not}}
+      <div class="col-50-group container" id="extras">
+        <div class="first">{%footer_col_1}</div>
+        <div class="last">{%footer_col_3}</div>
+      </div>
+    {end extras}
+
+
+    <div id="contact-bar">
+      <div id="vcard" class="vcard"> 
+        <div id="hcard-Brad-J-Caldwell" class="vcard"> 
+          <span class="url fn n"> 
+            <span class="given-name">Brad</span> 
+            <span class="additional-name"></span> 
+            <span class="family-name">Caldwell</span>   
+          </span> 
+          <div class="org">Audit Tree</div> 
+          <div class="email">
+          {begin enkoder | process escape}
+          <script type="text/javascript">
+          //<![CDATA[
+
+          function hiveware_enkoder(){var i,j,x,y,x=
+            "x=\"35346331376974322d387\\\"=x35343436322c5232336d38743136353733346634663" +
+            "66632303235663533663936346636343637373565373132343734303234373934373936323" +
+            "73635363232383237343235363532323032313365353633633634623536323534356738363" +
+            "33936336534613634633636363662313634636333663232363232343733656331363936363" +
+            "03332363162633933366632397436313b322c52663237337f613633366b37263562372d6b3" +
+            "73734303d396633663822656366336c6e287635363c39296537313b3864763034376e29743" +
+            "7393b79223634363d3b63753632356e657734373d3b2723363568256072353631637373653" +
+            "46e287b26366637256829363432747377323232657b3536336929223634373c2928782c616" +
+            "6756d3a6b32297d7b392920382471427168636e21382274737265737e287d383968227f666" +
+            "b37272d397b3964776e656c6e287c396b303d287d3b297b79263d3b296b3839233c2968227" +
+            "4737265737e7c396b333d3968227f666d7b3d3b296b3864776e656c6e28737265737e287d3" +
+            "b297b7926297d397d7b39233c29682274y;\\\"b392a682274737265737ei;htgnel.x<i;0" +
+            "=i(rof;''=s.x+'%'(epacsenu=+y{)2=+y};))2,i(rtsbu\";y='';for(i=0;i<x.length" +
+            ";i+=24){for(j=Math.min(x.length,i+24);--j>=i;){y+=x.charAt(j);}}y;";
+            while(x=eval(x));}hiveware_enkoder();
+
+            //]]>
+            </script>
+
+            {end enkoder}
+            </div>
+            <div class="adr"> 
+              <span class="locality">Calgary</span>,
+              <span class="region">AB</span> 
+            </div> 
+          <div class="tel">(403) 701-9195</div>
+          </div> 
+          
+          <div id="network">
+            <h3>Network</h3>
+            <ul>
+              <!--<li><a href="http://twitter.com/audittree">Follow Audit Tree</a></li>-->
+              <li><a href="http://twitter.com/Audit_Tree">Follow us on Twitter</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="copyright">
+
+        <p>&copy; {time represent as :Y} {@yari.client.name}</p>   
+      </div>
+      {%template:yari/blog/logout}
+    </div>
+    <!-- Place this tag in your head or just before your close body tag -->
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+  </body>
+  </html>
+  
+  
+  

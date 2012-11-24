@@ -1,0 +1,66 @@
+{content fetch where "tag = editable" | > :editable | ""}
+
+{begin warning | if {content check_autoload | is like :on}}
+<div class="locked"><p>Content autoloading is enabled. To edit page content, this feature must be turned off.</p></div>
+
+{begin js | process escape}
+<script>
+    $(document).ready(function(){
+  $('#tabs :input').attr('disabled','disabled'); 
+  $('#tabs').css('opacity','.6'); 
+  });
+  </script>
+{end js}
+{end warning}
+
+
+<div id="tabs">
+  <ul class="nav">
+    {begin editable | merge with @editable}
+    <li><a href="#tab-{type}-{path | string transform old "/(\/|_)/" new ""}"><span class="page">{type}</span><span class="keyword">{path}</span></a></li>
+    {end editable}
+  </ul>
+  {begin editable | merge with @editable}
+  <div id="tab-{type}-{path | string transform old "/(\/|_)/" new ""}">
+    <form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8">
+    <textarea name="value" id="value" class="markitup textile">{value | string sanitize}</textarea>
+      <input type="hidden" name="type" value="{type}">
+      <input type="hidden" name="path" value="{path}">
+      <input type="hidden" name="handle" value="{handle}" class="handle clearme">
+      <input type="hidden" name="tab-id" value="#tab-{type}-{path | string transform old "/(\/|_)/" new ""}">
+      <textarea name="commands" style="display:none">
+        {begin verbatim | process escape}
+        {content set_value for #handle to #value}
+        {notice set value "Success!"}
+        {page redirect to {"/yari/pages{#tab-id}"}}    
+        {end verbatim}
+      </textarea>
+    <div id="action_bar">    
+      <button type="submit" name="submit" id="submit" value="Save" class="save big">Save</button>
+      </div>
+    </form>
+  </div>
+  {end editable}
+</div>
+{begin js | process escape}
+<script>
+    $(document).ready(function(){
+
+
+      
+      
+  $('#tabs').tabs();
+	});
+  </script>
+{end js}
+  
+{begin warning | if {not {content check_autoload | is like :on}}}
+
+{begin js | process escape}
+<script>
+$(document).ready(function(){
+	$('textarea.markitup.textile').markItUp(textileSettings);
+	});
+</script>
+{end js}
+{end warning}

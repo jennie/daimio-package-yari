@@ -1,0 +1,118 @@
+<h1>My Profile</h1>
+
+<div class="row">
+  <div class="sidebar span4">{%sidebar}</div>
+  <div class="content span8">
+    
+    <!-- Profile editing modal
+      ================================================== -->
+      <form class="form-vertical" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+        <div class="well">
+          <div class="row">
+            <span class="span3">
+
+              <div class="image control-group">
+
+
+                {begin placeholder}
+                  <img src="http://placehold.it/180x180/444444/eeeeee&text={@profile.my.firstname}" alt="{@profile.my.firstname}'s avatar">
+                {end placeholder}
+                {begin avatar | if @profile.files.my.avatar else $placeholder}
+                  <img src="{@profile.files.my.avatar}" width="180" alt="{@profile.my.firstname}'s avatar">
+                {end avatar}
+
+                <label for="avatar" class="control-label">My Pic</label>
+                <input type="file" class="file" name="avatar" id="avatar">
+              </div>
+            </span>
+
+
+            <div class="control-group span4">
+              <label class="control-label" for="textarea">A short bio</label>
+              <div class="controls">
+                <textarea class="span4" id="bio" rows="5" name="my[bio]">{@profile.my.bio}</textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+
+        {/ PERSONAL }
+        <fieldset>
+          <div class="row">
+          <div class="span8">
+            <legend>Personal</legend>
+          </div>
+          </div>
+          <div class="row">
+            <div class="control-group span4">
+              <label class="control-label" for="firstname">First name</label>
+              <div class="controls">
+                <input type="text" class="span4" id="firstname" name="my[firstname]" value="{@profile.my.firstname}">
+              </div>
+            </div>
+            <div class="control-group span4">
+              <label class="control-label" for="lastname">Last name</label>
+              <div class="controls">
+                <input type="text" class="span4" id="lastname" name="my[lastname]" value="{@profile.my.lastname}">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="control-group span4">
+              <label class="control-label" for="email">Web site</label>
+              <div class="controls">
+                <input type="text" class="span4" id="website" name="my[website]" value="{@profile.my.website}">
+              </div>
+            </div>
+            <div class="control-group span4">
+              <label class="control-label" for="email">Twitter</label>
+              <div class="controls">
+
+                <div class="input-prepend">
+                  <span class="add-on">@</span><input type="text" class="" id="twitter" name="my[social.twitter]" value="{@profile.my.social.twitter}">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </fieldset>
+
+        {/ PROFESSIONAL }
+        <div class="row">
+          <div class="control-group span8">
+            <label class="control-label" for="tags">Interests/skills</label>
+            <div class="controls">
+              <textarea class="span8" id="tags" rows="3" name="interests">{@profile.tags | string join}</textarea>
+              <p class="help-block">Comma-separated, like <i>illustration, social causes, Stencyl</i>.</p>
+            </div>
+          </div>
+        </div>
+
+        {ifelse (
+          {@profile.my.trialweekstart | time represent | logic less than {time represent}} $trialstarted
+          :default $trialoptions
+        )}
+        <textarea name="commands" style="display:none">
+          {begin verbatim | process escape}
+            {begin ham | foreach with #my}
+              {my set for @MY.id in :profiles path key value value}
+            {end ham}
+            {tag set for @MY.id in :profiles value {#interests | string split on ", "}}
+            {exec upload_file thing (:profiles @MY.id) path :my.avatar file :avatar}
+            {notice set value {* (:message "<strong>Success!</strong> Your changes have been saved." :type :success)}} 
+          {end verbatim}     
+        </textarea>
+        <input type="submit" class="btn btn-primary btn-large" value="Save changes">
+      </div>
+
+
+    </form>
+    
+    
+    
+  </div>
+</div>

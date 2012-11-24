@@ -1,0 +1,4 @@
+{begin nullblock | process consume | @return}
+  {user | is like "/^\d+$/" | then "user_id" else "username" | > :field}
+  {data fetch form :articles where {"{@field} = {user} AND status = live"} order "publish_date DESC" limit {limit | else :20} | > :return}
+{end nullblock}

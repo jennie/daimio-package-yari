@@ -1,0 +1,7 @@
+{begin get_textile}
+  {notice toss message "Installing textile package..."}
+  {package download keyword :textile}
+  {package install keyword :textile}
+{end get_textile}
+
+{string textile on :x | is like "	<p>x</p>" | else "{$get_textile}"}

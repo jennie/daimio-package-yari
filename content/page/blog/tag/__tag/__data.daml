@@ -1,0 +1,1 @@
+{article tag_cloud | collection extract expression "{this.stripped_value | is like #tag}" | __pipe.#1.value | > :pretty_tag | ""}

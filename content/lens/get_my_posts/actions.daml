@@ -1,0 +1,20 @@
+{begin nullblock | process consume | @return}
+
+  {begin standard}
+
+    {begin blogger}
+      {data fetch form :articles where {"user_id = {@MY.id}"} order "publish_date DESC" | > :return}
+
+    {end blogger}
+
+    {begin admin | if {:admin | is in @MY.keychain} | else $blogger}
+      {data fetch form :articles order "publish_date DESC" | > :return}
+
+    {end admin}
+  {end standard} 
+
+  {begin by_tag | if #tag | else $standard}
+    {data fetch form :articles where {"user_id = {@MY.id} AND tags = {tag}"} order "publish_date DESC" | > :return}
+  {end by_tag}  
+
+{end nullblock}

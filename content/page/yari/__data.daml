@@ -1,0 +1,15 @@
+{/article detail}
+
+{begin article_detail | if {and ({#2 | is like :write} {#3 | is like "/^\d+$/"})}}
+  {data fetch form :articles where "id = {#3}" order "publish_date DESC" limit :1 | > :articles}
+  {data fetch form :comments where {"{#3} %= ({@articles.id | array to_csv})"} | array rekey by_key :article_id | > :comments}
+{end article_detail}
+
+{/user ids}
+{({@articles.user_id} {@comments.*.user_id}) | array union | array unique | > :user_ids}
+
+{/profiles}
+{/ {data fetch form :profiles | array rekey by_key :user_id | > :profiles} }
+
+{/profiles}
+{lens profile_find id @MY.id | __.#1 | > :profile}

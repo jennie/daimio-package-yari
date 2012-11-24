@@ -1,0 +1,14 @@
+<li class="parent {if {or ({#2 | is like :articles} {#2 | is like :write})} then :active}">
+  <a href="{@SITE.path}/yari/articles">My Articles</a>
+</li>
+{begin admin | if {:admin | is in @MY.keychain}}
+  {/ <li class="{#2 | is like :pages | then :active}">
+    <a href="{@SITE.path}/yari/pages">Pages</a>
+  </li> }
+  <li class="{#2 | is like :users | then :active}">
+    <a href="{@SITE.path}/yari/users">Users</a>
+  </li>
+  <li class="{#2 | is like :images | then :active}">
+    <a href="{@SITE.path}/yari/images">Images</a>
+  </li>
+{end admin}

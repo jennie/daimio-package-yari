@@ -1,0 +1,10 @@
+<div class="entry">
+  <h2><a class="title" title="{title}" href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}">{title}</a></h2>
+
+  <div class="summary">
+
+    <span class="author">Posted on <span class="date">{publish_date | time represent as "l, F j, Y"}</span> by <span class="author_username"><a href="{@SITE.path}/blog/profile/{user_id}">{@author}</a></span>        
+    <div class="summary">{summary | string textile}</div>
+  </div>
+</div>
+

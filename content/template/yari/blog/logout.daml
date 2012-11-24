@@ -1,0 +1,10 @@
+<form method="POST" id="logout">
+<textarea type="hidden" name="commands" id="commands" style="display:none;">
+{begin verbatim | process escape} 
+  {myself logout}
+  {notice set value "You are now logged out."}
+  {page redirect to :home}
+  
+{end verbatim}
+</textarea>
+</form>

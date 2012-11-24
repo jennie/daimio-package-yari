@@ -1,0 +1,9 @@
+<form method="post" accept-charset="utf-8" enctype="multipart/form-data" id="logout" style="display:none">
+   <textarea name="commands" style="display:none">
+     {begin verbatim | process escape}
+       {begin success | if {myself logout}}
+         {notice set value {* (:message "<strong>Success!</strong> You have been logged out." :type :success)}}      
+       {end success}
+     {end verbatim}
+   </textarea>
+ </form>

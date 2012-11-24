@@ -1,0 +1,29 @@
+{%notices}
+
+<div id="login">
+  {begin error | if @ERRORS.login}
+  <div class="error">{@ERRORS.login}</div>
+  {end error}
+  <form method="post" accept-charset="UTF-8" name="loginForm" id="loginForm" class="form form-inline">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" value="">      
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" value="">
+    </div>
+    <div class="keep_logged_in">
+      <input type="checkbox" name="keep" id="keep" value="60">
+      <label for="keep">Keep me logged in</label>
+    </div>
+    <textarea name="commands" style="display:none">
+      {begin verbatim | process escape}
+      {if {myself authenticate username #username password #password days #keep}
+      then "{page redirect to :yari}{notice set to "Logged in!"}"
+    }
+    {end verbatim}
+  </textarea>
+  <button type="submit" name="login_form_submit" value="Log In" id="login_form_submit" class="button submit">Log in</button>
+</form>
+</div>

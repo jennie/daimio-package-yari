@@ -1,0 +1,28 @@
+{/ this date list needs to limit the number of articles returned. organizing should maybe happen in the model. this could easily be cached. a calendar would be more useful in a lot of cases.}
+
+{lens get_articles_published_recent limit :30 | array organize command "stack:publish_date,Y;stack:publish_date,M" | > :archive | ""}
+
+<!-- date filter -->
+<div id="article-listing">
+  {begin archive | if @archive then "{$archive | merge with @archive}" else ""}
+  <ul class="years">
+    <li class="year">
+      <h5>{value}</h5>
+      {begin months | merge with items}
+      <ul class="months">
+        <li class="month">
+          <h5>{value}</h5>
+          {begin articles | merge with items}
+          <ul class="articles">
+            <li class="article-title">
+              <a href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}" title="{title}">{title}</a>
+            </li>
+          </ul>
+          {end articles}
+        </li>
+      </ul>
+      {end months}
+    </li>
+  </ul>
+  {end archive}
+</div>

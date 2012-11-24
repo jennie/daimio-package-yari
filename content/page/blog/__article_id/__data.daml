@@ -1,0 +1,3 @@
+{%page/blog/__data}
+{lens get_articles_published_by_id id #article_id | > :articles}
+{"dmgto:post={#article_id}" | > :tags}

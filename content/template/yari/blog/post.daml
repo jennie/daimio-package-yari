@@ -1,0 +1,51 @@
+{lens profile_find id user_id options {* (:limit 1)} | > :user_profile | ""}
+{lens member_find_by_ids ids #user_id | > :member | ""}
+
+<div class="post_body">
+  <h2>{title}</h2>
+  <p><strong>Posted on {publish_date | time represent as "F j, Y"}</strong> // by <a href="{@SITE.path}/members/profile/{user_id}">{@user_profile.#1.my.firstname} {@user_profile.#1.my.lastname}</a></p>
+
+
+
+  
+
+
+  {begin event | if {:events | is in tags.stripped_value}}
+    <p class="date">
+      {begin multiday}
+        {event_start_date | time represent as "D, F j"}
+        {begin end_date | if {:0000 | is in event_end_date | not}}
+          - {event_end_date | time represent as "D, F j"}
+        {end end_date}  
+      {end multiday}
+      {begin oneday | if {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} else $multiday}
+        {event_start_date | time represent as "D, F j"}
+      {end oneday}
+      //
+      {event_start_date | time represent as "Hi" | is like :0000 | then "All day" else "{event_start_date | time represent as "g:i a"}"}</p>
+
+
+    {end event}
+
+    {begin summary | if {not {#2 | is like "/^\d+$/"}}}
+      <h2>{summary | else {body | string truncate length :150} | string textile}</h2>
+    {end summary}
+
+
+    {begin full | if {#2 | is like "/^\d+$/"}}
+      {body | string textile}
+
+      <a href="http://twitter.com/share" class="twitter-share-button" data-text="Via @DMGToronto: {title}" data-count="none">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+      <!-- Place this tag where you want the +1 button to render -->
+      <a href="{@SITE.path}/blog/{id}">permalink</a> 
+
+    {end full}
+    <div class="extras">
+      {begin readmore | if {not {#2 | is like "/^\d+$/"}}}
+        <a title="{title}" class="more" href="{@SITE.path}/blog/{id}/{title | string url_encode}">Read more...</a>
+        {/ {begin invite | if {and ({allow_comments | is like "1"} {not {#2 | is like "/^\d+$/"}})}}
+          <a href="{@SITE.path}/blog/{id}#comments" class="add-comment">Add a comment</a>
+        {end invite} }
+      {end readmore}
+    </div>
+  </div>

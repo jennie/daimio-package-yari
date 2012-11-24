@@ -1,0 +1,31 @@
+<form method="post" class="form-inline" accept-charset="utf-8" enctype="multipart/form-data">
+  <div class="modal hide" id="log-in">
+
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3>Log in to your DMG.to account</h3>
+    </div>
+    <div class="modal-body">
+
+      <div class="control-group {@ERRORS.myself.authenticate | then "error"}">
+        <input type="text" class="input span3" name="username" placeholder="Username">
+      </div>
+      <div class="control-group {@ERRORS.myself.authenticate | then "error"}">
+        <input type="password" class="input span3" name="password" placeholder="Password">
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" name="days" value="30"> Keep me logged in for 30 days.
+      </label>
+      <textarea name="commands" style="display:none">
+        {begin verbatim | process escape}
+          {begin success | if {myself authenticate username #username password #password days #days} else "{notice set value {* ( :message "<strong>oops!</strong> You mistyped your username or password! Please try again." :type :error)}}"}
+
+          {end success}
+        {end verbatim}
+      </textarea>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Log in</button>
+    </div>
+  </div>
+</form>

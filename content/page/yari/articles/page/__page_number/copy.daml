@@ -1,0 +1,1 @@
+{%page/yari/articles/copy}{data fetch form :articles order "publish_date DESC" limit {#limit | else :10} | > :articles}

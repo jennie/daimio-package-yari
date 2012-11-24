@@ -1,0 +1,36 @@
+{ifelse (
+  {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} "{"oneday" | > :type | ""}"
+  :default "{"multiday" | > :type | ""}"
+) | ""}
+<div class="row"> 
+  <span class="{@type | is like :multiday | then "span4" else "span1"}">
+    <p class="date">
+
+      {begin multiday}
+        {event_start_date | time represent as "M d"}
+        {begin end_date | if {:0000 | is in event_end_date | not}}
+          - {event_end_date | time represent as "M d"}
+        {end end_date}  
+      {end multiday}
+
+      {begin oneday | if {{event_end_date | time represent as "Ymd"} | is in {event_start_date | time represent as "Ymd"}} | else $multiday}
+        {event_start_date | time represent as "M d, Y" | > :start | ""}
+        {time represent as "M d, Y" | > :today | ""}
+        {begin today}
+          <span class="label label-warning">Today</span>          
+        {end today}
+
+        {@start | is like @today | then $today | else "{event_start_date | time represent as "M d"}"}
+      {end oneday}
+
+    </p>
+  </span>
+  <span class="{@type | is like :multiday | then "span3 offset1" else "span3"}">
+    <a class="title" title="{title}" href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}">{title}</a>
+    <br>
+    {event_start_date | time represent as "Hi" | is like :0000 | then "All day" else "{event_start_date | time represent as "g:i a"}"}
+    <br>
+    {/ {summary} }
+  </span>
+</div>
+

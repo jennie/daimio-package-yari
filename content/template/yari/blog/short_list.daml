@@ -1,0 +1,8 @@
+
+<div class="row">
+  
+  <p class="span3"><a class="title" title="{title}" href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}">{title}</a></p>
+  <p class="span1"><span class="pull-right">{publish_date | time represent as "M_d"}</span></p>
+  
+
+</div>

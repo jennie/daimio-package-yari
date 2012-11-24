@@ -1,0 +1,10 @@
+<div id="footer" class="section">
+  {%contact}
+  <div class="copyright">
+    <p>&copy; {time represent as :Y} {@yari.client.name}</p>   
+  </div>
+  
+
+  
+  {%template:yari/blog/logout}
+</div>

@@ -1,0 +1,165 @@
+<form method="post" ENCTYPE="multipart/form-data" accept-charset="utf-8">
+  <div class="row">
+    {begin layout}
+      <div class="{@articles.{#id}.status} span8">
+        <h2>{if #id then "Editing Article" else "New Article"}</h2>
+
+        {/ TITLE }
+        <div class="title control-group">
+          <label for="title" class="control-label">Title</label>
+          <input type="text" name="title" id="title" class="span8" value="{fields.title.value}">
+        </div>
+
+        {/ ASIDE }
+        <div class="summary control-group">
+          <label for="aside" class="control-label">Intro/Aside <small class="pull-right">This appears in the header on blog detail pages.</small></label>
+          <textarea class="span8" id="textarea" rows="4" name="aside">{fields.aside.value}</textarea>
+
+        </div>
+
+        {/ BODY }
+        <div class="body control-group">
+          <label for="body" class="control-label">Body</label>
+          <textarea class="span8" id="textarea" rows="15" name="body">{fields.body.value}</textarea>
+        </div>
+
+
+        {/ SUMMARY }
+        <div class="summary control-group">
+          <label for="summary" class="control-label">Summary <small class="pull-right">This appears below the title on blog archives/list pages.</small></label>
+          <textarea class="span8" id="textarea" rows="8" name="summary">{fields.summary.value}</textarea>
+
+
+        </div>
+
+
+
+
+      </div>
+
+      <div class="span4">
+        <div class="well">
+          {// STATUS //}
+          <div class="status  control-group">
+            <label for="status" class="control-label">Status</label>
+            <p class="help-block"></p>
+            <select name="status" id="status">
+
+              <option value="draft" {:selected | if {fields.status.value | is like :draft}}>draft</option>
+
+              <option value="live" {:selected | if {fields.status.value | is like :live}}>live</option>
+
+              {// <option value="hidden">hidden</option> //}
+
+            </select>
+          </div>
+
+
+          {/ PUB DATE}
+          <div class="control-group">
+            <label for="publish_date" class="control-label">Publish Date</label>
+            <p class="help-block"></p>
+            <input type="text" name="publish_date" class="" id="publish_date" value="{ifelse ({fields.publish_date.value} "{fields.publish_date.value | time represent as "m/d/Y"}" :default "{time represent as "m/d/Y"}")}">
+          </div>
+
+
+          {/ TAGS }
+          <div class="tags  control-group">
+            <label for="tags" class="control-label">Tags</label>
+            <p class="help-block"></p>
+            <textarea name="tags" id="tags" class="tags">{fields.tags.value}</textarea><p class="description"></p>
+          </div>
+
+
+
+          {/ COMMENTS}
+          {/ <div class="control-group">
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox" name="allow_comments" id="allow_comments" value="1">
+                Allow commenting on this article
+              </label>
+            </div>
+          </div> }
+
+          {/ EVENT}
+          <div class="control-group">
+            <div class="controls">
+              <label class="checkbox">
+                <input type="checkbox" name="event" id="event" value="1" {fields.event_start_date.value | then :checked}>
+                This is an event
+              </label>
+            </div>
+          </div>
+
+
+          <div id="events">
+            <h3>Events</h3>
+
+
+            <div id="event-controls">
+
+              {/ EVENT START DATE}
+              <div class="control-group">
+                <label for="event_start_day" class="control-label">Event start day</label>
+                <input type="text" name="event_start_day" class="date" id="event_start_day" value="{fields.event_start_date.value | time represent as "M d, Y" | else ""}">
+
+                <input type="text" name="event_start_time" value="{fields.event_start_date.value | time represent as "g:ia" | else ""}" id="event_start_time">
+
+              </div>
+
+              {/ EVENT END DATE}
+              <div class="control-group">
+                <label for="event_end_day" class="control-label">Event end day</label>
+                <input type="text" name="event_end_day" class="date" id="event_end_day" value="{fields.event_end_date.value | time represent as "M d, Y"}">
+
+                <input type="text" name="event_end_time" value="{fields.event_end_date.value | time represent as "g:ia" | else :10pm}" id="event_end_time">
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="form-actions"><button class="btn btn-large btn-primary">Save</button>
+        </div>
+
+
+        {begin existing | if #id}
+          {%page/yari/machinetagger}
+          <div class="control-group">
+            <label class="control-label" for="permalink">Permalink</label>
+            <div class="controls">
+              <input value="{@SITE.path}/blog/{@articles.{#id}.id}" id="" class="input-xlarge select span4" readonly="readonly" type="text" onfocus="this.select();" onclick="this.select();">
+            </div>
+            <a class="btn" href="{@SITE.path}/blog/{@articles.{#id}.id}/{@articles.{#id}.title | string url_encode}"><i class="icon-eye-open"></i></a>
+          {end existing}
+        </div><!--/.well -->
+      </div><!--/span-->
+      <input type="hidden" name="row_id" value="{#id}">
+      <textarea name="commands" style="display:none">
+        {begin verbatim | sub with id as :row | process escape}
+
+          {data input form :articles row #row_id values @POST | > :post_id}
+
+          {begin success | if @post_id}
+
+            {(#event_start_day #event_start_time) | string join | > :event_start_date}
+            {(#event_end_day #event_end_time) | string join | > :event_end_date}            
+            {begin not_event}
+              {data input form :articles row @post_id values {* (:event_end_date "" :event_start_date "")}}           
+            {end not_event}
+
+            {begin event | if {#event | is like 1} else $not_event}
+              {data input form :articles row @post_id values {* (:event_end_date @event_end_date :event_start_date @event_start_date :event_attendee_limit #attendees :event_price #event_price)}}        
+            {end event}
+            {notice set value {* ( :message "<strong>Success!</strong> Your blog post has been saved!" :type :success)}}
+            {page redirect to {"/yari/write/{@post_id}"}}            
+          {end success}
+        {end verbatim}
+      </textarea>
+    </div>
+  </div>
+</form>
+{end layout}
+{form display keyword :articles row #id layout $layout}
+</div>

@@ -1,0 +1,8 @@
+<div class="control-group">
+  <label class="control-label" for="mtag">Flickr machine tag</label>
+  <div class="controls">
+
+    <input value="{@yari.mtag.name}:post={#id}" id="mtag" class="input-xlarge span4" readonly="readonly" type="text" onfocus="this.select();" onclick="this.select();">
+
+  </div>
+</div>

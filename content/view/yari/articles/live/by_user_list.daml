@@ -1,0 +1,9 @@
+{lens get_articles_published_by_user user #user_id | > :articles | ""}
+
+{begin articles | merge with @articles}
+    <h4><a class="title" title="{title}" href="{@SITE.path}/blog/{id}/{publish_date | time represent as "d-m-Y"}/{title | string url_encode}">{title}</a></h4> {/ <span class="date">{publish_date | time represent as "M d"}</span> }
+{end articles}
+
+{begin no_articles | if {not @articles}}
+<p>There are no matching articles.</p>
+{end no_articles}

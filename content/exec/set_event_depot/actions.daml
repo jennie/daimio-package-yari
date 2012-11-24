@@ -1,0 +1,1 @@
+{permit superdo command "{depot set for event_id in :events path path value value}"}
